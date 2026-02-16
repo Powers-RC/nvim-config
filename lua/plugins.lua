@@ -3,9 +3,9 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
-    "--filter=blob:none",
+    -- "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+  
     lazypath,
   })
 end
@@ -263,5 +263,30 @@ require("lazy").setup({
       end,
     },
   'tpope/vim-commentary',
+  'lewis6991/gitsigns.nvim',
+  {
+      "folke/which-key.nvim",
+      event = "VeryLazy",
+      init = function()
+        vim.o.timeout = true
+        vim.o.timeoutlen = 300
+      end,
+        keys = {
+        {
+          "<leader>?",
+          function()
+            require("which-key").show({ global = false })
+          end,
+          desc = "Buffer Local Keymaps (which-key)",
+        },
+      },
+  },
+  {
+      'nvim-lualine/lualine.nvim',
+      dependencies = { 'nvim-tree/nvim-web-devicons' },
+      config = function() 
+          require("lualine").setup({options={theme='PaperColor'}})
+      end,
+  }
 })
 

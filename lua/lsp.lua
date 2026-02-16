@@ -33,6 +33,27 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 })
 
+-- Create an autocmd group for formatting on save
+local format_on_save_group = vim.api.nvim_create_augroup("LspFormatting", {})
+
+-- Attach the formatting autocmd to the LspAttach event
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = format_on_save_group,
+    callback = function(args)
+        -- Check if the attached LSP client supports the formatting method
+        if vim.lsp.buf.server_caps[args.client_id].documentFormatting then
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = format_on_save_group,
+                buffer = args.buffer,
+                callback = function()
+                    -- Use the synchronous formatting function (most reliable)
+                    vim.lsp.buf.format({ bufnr = args.buffer, async = false })
+                end,
+            })
+        end
+    end,
+})
+
 vim.lsp.enable({ "ty" })
 vim.lsp.enable({ "tsserver" })
 vim.lsp.enable({ "tailwind" })
