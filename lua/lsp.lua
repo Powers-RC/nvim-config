@@ -33,28 +33,20 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 })
 
--- Create an autocmd group for formatting on save
-local format_on_save_group = vim.api.nvim_create_augroup("LspFormatting", {})
-
--- Attach the formatting autocmd to the LspAttach event
 vim.api.nvim_create_autocmd("LspAttach", {
-    group = format_on_save_group,
-    callback = function(args)
-        -- Get the attached LSP client
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client.name == "ts_ls" then
+      client.server_capabilities.documentFormattingProvider = false
+    end
+  end,
+})
 
-        
-        -- Check if the client supports document formatting
-        if client.server_capabilities.documentFormattingProvider then
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                group = format_on_save_group,
-                buffer = args.buf,
-                callback = function()
-                    vim.lsp.buf.format({ bufnr = args.buf, async = false })
-                end,
-            })
-        end
-    end,
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
 })
 
 

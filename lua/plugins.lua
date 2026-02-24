@@ -294,6 +294,20 @@ require("lazy").setup({
       config = function() 
           require("lualine").setup({options={theme='PaperColor'}})
       end,
-  }
+  },
+  {
+    "stevearc/conform.nvim",
+    config = function() 
+    require("conform").setup({
+      formatters_by_ft = {
+        typescript = { "prettier" },
+        typescriptreact = { "prettier" },
+        javascript = { "prettier" },
+        javascriptreact = { "prettier" },
+      },
+      format_on_save = true
+    })
+    end
+  },
 })
 
