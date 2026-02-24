@@ -33,6 +33,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 })
 
+-- Prevent the typescript lsp from formatting document
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -42,12 +43,23 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- Change js,ts,jsx,tsx formatting defaults
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "javascript,typescript,javascriptreact,typescriptreact",
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.expandtab = true -- JS/TS often uses 2 spaces
+  end
+})
+
 vim.diagnostic.config({
   virtual_text = true,
   signs = true,
   underline = true,
   update_in_insert = false,
 })
+
 
 
 vim.lsp.enable({ "ty" })
