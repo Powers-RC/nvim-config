@@ -148,6 +148,7 @@ require("lazy").setup({
               path = vim.fn.expand("%:p:h"),
               cwd = vim.fn.expand("%:p:h"),
               select_buffer = true,
+              hidden = true
             })
           end,
           desc = "File browser (current file)",
@@ -256,6 +257,11 @@ require("lazy").setup({
               },
             },
           },
+          pickers = {
+              find_files = {
+                  hidden = true
+              }
+          }
         })
 
         -- Load the file_browser extension explicitly
