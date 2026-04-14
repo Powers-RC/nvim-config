@@ -310,10 +310,25 @@ require("lazy").setup({
         typescriptreact = { "prettier" },
         javascript = { "prettier" },
         javascriptreact = { "prettier" },
+        json = { "prettier" },
+        jsonc = { "prettier" },
       },
-      format_on_save = true
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
     })
     end
+  },
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "nvim-neotest/nvim-nio",
+    },
+    config = function()
+      require("dap-config")
+    end,
   },
 })
 

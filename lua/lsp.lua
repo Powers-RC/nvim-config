@@ -66,4 +66,5 @@ vim.lsp.enable({ "ty" })
 vim.lsp.enable({ "tsserver" })
 vim.lsp.enable({ "tailwind" })
 vim.lsp.enable({ "php" })
+vim.lsp.enable({ "jsonls" })
 
