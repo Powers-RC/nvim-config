@@ -8,6 +8,13 @@ dap.adapters.python = {
   args = { "-m", "debugpy.adapter" },
 }
 
+-- TCP adapter for attaching to a running debugpy server (e.g. Docker on port 5678)
+dap.adapters.python_remote = {
+  type = "server",
+  host = "127.0.0.1",
+  port = 5678,
+}
+
 -- pythonPath helper: prefer .venv in cwd, fall back to system python3
 local function python_path()
   local venv = vim.fn.getcwd() .. "/.venv/bin/python"
@@ -34,6 +41,18 @@ dap.configurations.python = {
     end,
     pythonPath = python_path,
   },
+  {
+    type       = "python_remote",
+    request    = "attach",
+    name       = "Attach to Docker (port 5678)",
+    subProcess = true,
+    pathMappings = {
+      {
+        localRoot  = vim.fn.getcwd(),
+        remoteRoot = "/app",
+      },
+    },
+  },
 }
 
 -- DAP UI
@@ -45,15 +64,14 @@ dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close()
 dap.listeners.before.event_exited["dapui_config"]     = function() dapui.close() end
 
 -- Keymaps
-local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<leader>dc", dap.continue,          opts) -- Continue / Start
-vim.keymap.set("n", "<leader>ds", dap.step_over,         opts) -- Step over
-vim.keymap.set("n", "<leader>di", dap.step_into,         opts) -- Step into
-vim.keymap.set("n", "<leader>do", dap.step_out,          opts) -- Step out
-vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, opts) -- Toggle breakpoint
+vim.keymap.set("n", "<leader>dc", dap.continue,          { noremap = true, silent = true, desc = "DAP: Continue / Start" })
+vim.keymap.set("n", "<leader>ds", dap.step_over,         { noremap = true, silent = true, desc = "DAP: Step over" })
+vim.keymap.set("n", "<leader>di", dap.step_into,         { noremap = true, silent = true, desc = "DAP: Step into" })
+vim.keymap.set("n", "<leader>do", dap.step_out,          { noremap = true, silent = true, desc = "DAP: Step out" })
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { noremap = true, silent = true, desc = "DAP: Toggle breakpoint" })
 vim.keymap.set("n", "<leader>dB", function()
   dap.set_breakpoint(vim.fn.input("Condition: "))
-end, opts)                                                      -- Conditional breakpoint
-vim.keymap.set("n", "<leader>dr", dap.repl.open,         opts) -- Open REPL
-vim.keymap.set("n", "<leader>du", dapui.toggle,          opts) -- Toggle UI
-vim.keymap.set("n", "<leader>dx", dap.terminate,         opts) -- Terminate session
+end,                                                       { noremap = true, silent = true, desc = "DAP: Conditional breakpoint" })
+vim.keymap.set("n", "<leader>dr", dap.repl.open,         { noremap = true, silent = true, desc = "DAP: Open REPL" })
+vim.keymap.set("n", "<leader>du", dapui.toggle,          { noremap = true, silent = true, desc = "DAP: Toggle UI" })
+vim.keymap.set("n", "<leader>dx", dap.terminate,         { noremap = true, silent = true, desc = "DAP: Terminate session" })

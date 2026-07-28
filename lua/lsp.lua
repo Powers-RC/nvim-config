@@ -67,4 +67,5 @@ vim.lsp.enable({ "tsserver" })
 vim.lsp.enable({ "tailwind" })
 vim.lsp.enable({ "php" })
 vim.lsp.enable({ "jsonls" })
+vim.lsp.enable({ "ruff" })    -- ruff linter
 
